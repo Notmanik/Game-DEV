@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Build current SFML file",
+        "type": "shell",
+        "command": "g++",
+        "args": [
+          "${file}",
+          "-o",
+          "${fileDirname}/${fileBasenameNoExtension}",
+          "-lsfml-graphics",
+          "-lsfml-window",
+          "-lsfml-system"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": ["$gcc"],
+        "detail": "Builds the current open SFML source file"
+      }
+    ]
+  }
+  

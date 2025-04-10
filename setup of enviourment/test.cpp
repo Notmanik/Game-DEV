@@ -8,7 +8,7 @@ class Game
 
    private:
     void processEvents();
-    void update();
+    void update(sf::Time time);
     void render();
     void handlePlayerInput(sf::Keyboard::Key key, bool ispressed);
 
@@ -23,7 +23,7 @@ Game::Game()
       ,
       mPlayer()  // Default-constructed player
 {
-    mWindow.setFramerateLimit(60);          // sets the frames cap to 60 so that it wont run without bounds
+    // mWindow.setFramerateLimit(60);          // sets the frames cap to 60 so that it wont run without bounds
     mPlayer.setRadius(40.f);                // Set player size
     mPlayer.setPosition(100.f, 100.f);      // Set player position
     mPlayer.setFillColor(sf::Color::Cyan);  // Set player color
@@ -31,10 +31,20 @@ Game::Game()
 
 void Game::run()
 {
+    sf::Clock clock;
+    sf::Time timeSinceLastUpdate = sf::Time::Zero;
+    sf::Time TimePerFrame = sf::seconds(1.f/60.f);
     while (mWindow.isOpen())
     {
-        processEvents();
-        update();
+
+        timeSinceLastUpdate += clock.restart();
+        while (timeSinceLastUpdate > TimePerFrame)
+        {
+            timeSinceLastUpdate -= TimePerFrame;
+            processEvents();
+            update(TimePerFrame);
+        }
+        
         render();
     }
 }
@@ -76,7 +86,7 @@ void Game::processEvents()
         }
     }
 }
-void Game::update()
+void Game::update(sf::Time time)
 {
     sf::Vector2f movement(0.f, 0.f);
     if (mIsMovingUp)
@@ -87,7 +97,7 @@ void Game::update()
         movement.x -= 1.f;
     if (mIsMovingRight)
         movement.x += 1.f;
-    mPlayer.move(movement);
+    mPlayer.move(movement * time.asSeconds());
 }
 void Game::render()
 {
